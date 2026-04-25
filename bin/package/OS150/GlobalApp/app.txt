@@ -1,0 +1,11 @@
+AIMemory
+AIMagicStudio
+AssistantScreen
+ColorAccessibilityAssistant
+ColorDirectService
+OppoWeather2
+OppoWeatherService
+SmartSideBar
+UMS
+Calendar
+GlobalSearch

@@ -1,0 +1,6 @@
+(typeattribute mosey_service_202404)
+(typeattributeset mosey_service_202404 (mosey_service))
+(expandtypeattribute (mosey_service_202404) true)
+(typeattribute mosey_app_202404)
+(typeattributeset mosey_app_202404 (mosey_app))
+(expandtypeattribute (mosey_app_202404) true)
