@@ -147,9 +147,8 @@ mvdir() {
 Patch_Framework () {
 
     jar_util d 'framework.jar' fw 0 10
-
-    FRAMEWORK_DIR="$work_dir/jar_temp/framework.jar.out"
-    $patch $dir/jar_temp/framework.jar.out
+    FRAMEWORK_DIR="$dir/jar_temp/framework.jar.out"
+    $patch $FRAMEWORK_DIR
     max_dex=$(find "$FRAMEWORK_DIR" -maxdepth 1 -name "classes*.dex.out" | sed 's/.*classes\([0-9]*\)\.dex\.out/\1/' | sort -rn | head -1)
     new_dex=$((max_dex + 1))
     new_dex_folder="$FRAMEWORK_DIR/classes$new_dex.dex.out"
@@ -158,8 +157,7 @@ Patch_Framework () {
     mvsml "Instrumentation.smali" "$new_dex_folder" >/dev/null 2>&1
     mvsml "AndroidKeyStoreKeyPairGeneratorSpi.smali" "$new_dex_folder" >/dev/null 2>&1
     mvsml "ApplicationPackageManager.smali" "$new_dex_folder" >/dev/null 2>&1
-    cp -rf $dir/bin/package/FrameworkPatcher/KouseiPatcher/smail/* $new_dex_folder
-    
+    cp -rf $dir/bin/package/FrameworkPatcher/KouseiPatcher/smali/* $new_dex_folder
     jar_util a 'framework.jar' fw 0 10
 
 }

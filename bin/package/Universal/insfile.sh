@@ -2,7 +2,7 @@ work_dir=$(pwd)
 source $work_dir/functions.sh
 
 mods "Starting Apply Universal File..."
-TARGET_DIR="$work_dir/bin/modfile/Universal"
+TARGET_DIR="$work_dir/bin/package/Universal"
 noexecute=( "insfile" )
 
 find "$TARGET_DIR" -type f -name "*.sh" | while read -r script; do
