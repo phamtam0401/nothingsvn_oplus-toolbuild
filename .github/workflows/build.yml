@@ -6,16 +6,6 @@ on:
       input_url:
         description: 'URL of the ROM to build'
         required: true
-      kaorios_toolbox:
-        description: 'Install KaoriOS toolbox to ROM?'
-        required: true
-        type: boolean
-        default: true
-      install_mods:
-        description: 'Install mods to ROM?'
-        required: true
-        type: boolean
-        default: true
       
 jobs:
   Initialize:
@@ -70,20 +60,6 @@ jobs:
         run: |
           sudo chmod 777 -R *
 
-      - name: Get environment Toolbox boolean before install...
-        if: ${{ inputs.kaorios_toolbox }} == 'true'
-        run: |
-          echo "install_toolbox=true"
-        else:
-          echo "install_toolbox=false"
-          
-      - name: Get environment Mods boolean before install...
-        if: ${{ inputs.install_mods }} == 'true'
-        run: |
-          echo "install_mods=true"
-        else:
-          echo "install_mods=false"
-          
       - name: Build ROM...
         env:
           INPUT_URL: ${{ inputs.input_url }}
