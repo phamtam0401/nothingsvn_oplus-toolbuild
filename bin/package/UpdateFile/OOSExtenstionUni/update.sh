@@ -161,5 +161,5 @@ remove_feature com.android.settings.screen_physics_size_cm
 remove_feature com.oplus.wallpapers.ai_camera_movement
 
 echo "[MODS] - Disabling OTA Update..."
-cp -rf $BLOB/feature_otablocking.xml $MY_STOCK/etc/extension
+cp -rf $BLOB/feature_com.hma.otablock.xml $MY_STOCK/etc/extension
 echo "[MODS] - Done"
