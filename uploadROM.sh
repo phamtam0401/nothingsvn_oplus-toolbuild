@@ -7,8 +7,8 @@ ANDROID_VER=$(cat $work_dir/bin/ddevice/androidver.txt)
 DEVICE_MODEL=$(cat $work_dir/bin/ddevice/device_model.txt)
 BASE_BUILD_ID=$(cat $work_dir/bin/ddevice/base_build_id.txt)
 BRAND=$(cat $work_dir/bin/ddevice/brand.txt)
-RCLONE_CONFIG_1DRIVE="$work_dir/rclone.conf"
-ONEDRIVE_REMOTE="starxONEDRIVE"
+RCLONE_CONFIG_GDRIVE="$work_dir/rclone.conf"
+ONEDRIVE_REMOTE="drive1"
 
 
 
@@ -24,7 +24,7 @@ if [ "$1" == "setup" ]; then
   exit 0
 elif [ "$1" == "dummy" ]; then
   rclone -v --config="$RCLONE_CONFIG_1DRIVE" copy "$work_dir/dummy.txt" "$ONEDRIVE_REMOTE:NTBuild/${uploaddir}/${VERSION}/${DEVICE_MODEL}/" || {
-    echo "[ONEDRIVE] - Error uploading file to OneDrive: $FILENAME"
+    echo "[GDRIVE] - Error uploading file to GDrive: $FILENAME"
     exit 1
   }
   exit 0
@@ -56,10 +56,10 @@ mv out/${NTBUILD}_${DEVICE_MODEL}_${ANDROID_VER}_OS${BASE_BUILD_ID}.zip out/${NT
 echo "[SCRIPT] - Output: "
 output_file="out/${NTBUILD}_${VERSION}_${DEVICE_MODEL}_OS${BASE_BUILD_ID}_${hash}_${status}.zip"
 echo "$output_file"
-echo "[ONEDRIVE] - Uploading"
+echo "[GDRIVE] - Uploading"
 # 1drive
 rclone -v --config="$RCLONE_CONFIG_1DRIVE" copy "$output_file" "$ONEDRIVE_REMOTE:NTBuild/${uploaddir}/${VERSION}/${DEVICE_MODEL}/" || {
-echo "[ONEDRIVE] - Error uploading file to OneDrive: $output_file"
+echo "[GDRIVE] - Error uploading file to GDrive: $output_file"
 exit 1
 }
 
