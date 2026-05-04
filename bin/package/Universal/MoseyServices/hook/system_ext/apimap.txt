@@ -1,2 +1,0 @@
-(typeattribute mosey_app_202404)
-(typeattribute mosey_service_202404)
