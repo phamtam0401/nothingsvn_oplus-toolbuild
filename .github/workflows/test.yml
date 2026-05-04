@@ -39,10 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         
-      - name: Giving permission
-        run: |
-          sudo chmod 777 -R *
-
       - name: Setup Rclone...
         run: |
           sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ secrets.RCLONE_TOKEN_PATH }}"
