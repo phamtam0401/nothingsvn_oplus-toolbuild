@@ -38,7 +38,23 @@ jobs:
     needs: Initialize
     runs-on: ubuntu-latest
     steps:
+      - name: Install OpenJDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Checkout repository
+        uses: actions/checkout@main
+
+      - name: Install Stuff
+        run: |
+          sudo bash setup.sh
         
+      - name: Giving permission
+        run: |
+          sudo chmod 777 -R *
+
       - name: Setup Rclone...
         run: |
           sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ secrets.RCLONE_TOKEN_PATH }}"
@@ -48,7 +64,6 @@ jobs:
           echo "[INFO] - Kiểm tra sự tồn tại của file rclone.conf..."
           if [ ! -f "rclone.conf" ]; then
             echo "[ERROR] - Không tìm thấy file rclone.conf. Quá trình tải file đã thất bại!"
-            cat rclone.conf        
             exit 1
           fi
           
@@ -56,6 +71,7 @@ jobs:
           # Lệnh này sẽ in ra danh sách các remote đang có trong file config
           rclone listremotes --config="rclone.conf" || {
             echo "[ERROR] - rclone.conf bị sai định dạng hoặc không hợp lệ!"
+            cat rclone.conf
             exit 1
           }
           echo "[SUCCESS] - Rclone đã sẵn sàng
