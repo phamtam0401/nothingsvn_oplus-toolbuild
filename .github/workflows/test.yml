@@ -38,18 +38,6 @@ jobs:
     needs: Initialize
     runs-on: ubuntu-latest
     steps:
-      - name: Install OpenJDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Checkout repository
-        uses: actions/checkout@main
-
-      - name: Install Stuff
-        run: |
-          sudo bash setup.sh
         
       - name: Giving permission
         run: |
@@ -64,6 +52,7 @@ jobs:
           echo "[INFO] - Kiểm tra sự tồn tại của file rclone.conf..."
           if [ ! -f "rclone.conf" ]; then
             echo "[ERROR] - Không tìm thấy file rclone.conf. Quá trình tải file đã thất bại!"
+            cat rclone.conf        
             exit 1
           fi
           
