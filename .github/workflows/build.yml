@@ -67,7 +67,7 @@ jobs:
 
       - name: Setup Rclone...
         run: |
-          sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ secrets.GDRIVE_SERVICE_ACCOUNT }}"
+          sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ rclone.conf }}"
           
       - name: Upload ROM...
         run: |
