@@ -67,7 +67,23 @@ jobs:
 
       - name: Setup Rclone...
         run: |
-          sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "rclone.conf"
+          sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ secrets.RCLONE_TOKEN_PATH }}"
+
+      - name: Verify Rclone Configuration
+        run: |
+          echo "[INFO] - Kiểm tra sự tồn tại của file rclone.conf..."
+          if [ ! -f "rclone.conf" ]; then
+            echo "[ERROR] - Không tìm thấy file rclone.conf. Quá trình tải file đã thất bại!"
+            exit 1
+          fi
+          
+          echo "[INFO] - File cấu hình đã tồn tại. Đang kiểm tra định dạng rclone..."
+          # Lệnh này sẽ in ra danh sách các remote đang có trong file config
+          rclone listremotes --config="rclone.conf" || {
+            echo "[ERROR] - rclone.conf bị sai định dạng hoặc không hợp lệ!"
+            exit 1
+          }
+          echo "[SUCCESS] - Rclone đã sẵn sàng!"
           
       - name: Upload ROM...
         run: |
