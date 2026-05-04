@@ -73,8 +73,20 @@ jobs:
         run: |
           sudo -E bash uploadROM.sh
       
-      - name: Update Database and Notificaton to Telegram
+      - name: Update Database and Notification to Telegram
         env:
           TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }} # Thêm Chat ID vào Secrets của GitHub
+          DOWNLOAD_LINK: "https://link-tai-rom-cua-ban.com" # Thay bằng link thực tế hoặc biến môi trường chứa link từ step trước
         run: |
+          echo "Gửi thông báo tới Telegram..."
+          
+          curl -s -X POST https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "chat_id": "'"$TELEGRAM_CHAT_ID"'",
+              "text": "✅ *Build ROM thành công!*\n📦 Tải về tại đây: [Click để tải]('"$DOWNLOAD_LINK"')",
+              "parse_mode": "Markdown"
+            }'
+
           
