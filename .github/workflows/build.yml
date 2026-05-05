@@ -86,7 +86,7 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": "'"$TELEGRAM_CHAT_ID"'",
-              "text": "✅ *Build ROM cho ('$DEVICE_MODEL') thành công!*\n📦 Tải về tại đây: [Click để tải]('"$DOWNLOAD_LINK"')",
+              "text": "✅ *Build ROM OnePlus thành công!*\n📦 Check ROM tại đây: [Click để tải]('"$DOWNLOAD_LINK"')",
               "parse_mode": "Markdown"
             }'
 
