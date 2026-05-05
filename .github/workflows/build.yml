@@ -77,7 +77,8 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TG_CHAT_ID }} # Thêm Chat ID vào Secrets của GitHub
-          DOWNLOAD_LINK: "https://link-tai-rom-cua-ban.com" # Thay bằng link thực tế hoặc biến môi trường chứa link từ step trước
+          DEVICE_MODEL: $(cat "$work_dir/bin/ddevice/device_model.txt")
+          DOWNLOAD_LINK: "https://drive.google.com/drive/folders/1vxdFqOk6AXtb_e1Z8n_n1o0Bp9Qy41BK?usp=drive_link" # Thay bằng link thực tế hoặc biến môi trường chứa link từ step trước
         run: |
           echo "Gửi thông báo tới Telegram..."
           
@@ -85,7 +86,7 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{
               "chat_id": "'"$TELEGRAM_CHAT_ID"'",
-              "text": "✅ *Build ROM thành công!*\n📦 Tải về tại đây: [Click để tải]('"$DOWNLOAD_LINK"')",
+              "text": "✅ *Build ROM cho $(DEVICE_MODEL) thành công!*\n📦 Tải về tại đây: [Click để tải]('"$DOWNLOAD_LINK"')",
               "parse_mode": "Markdown"
             }'
 
