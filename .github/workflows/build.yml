@@ -67,34 +67,40 @@ jobs:
           sudo bash packROM.sh n
 
       # =========================
-      # 🚀 NEW: CREATE FILE FOR PHONE UPLOAD
+      # 🚀 SPLIT ROM (FIX 413 ERROR)
       # =========================
-      - name: Prepare upload file
+      - name: Split ROM
         run: |
-          mkdir -p upload
-          cp -r out/*.zip upload/ || true
+          mkdir upload
+
+          ROM=$(ls out/*.zip | head -n 1)
+
+          echo "ROM: $ROM"
+
+          split -b 500M "$ROM" upload/part_
+
           ls -lh upload
 
       # =========================
-      # 🚀 UPLOAD TO PHONE VIA CLOUDFLARE
+      # 🚀 UPLOAD TO PHONE (CLOUDFLARE)
       # =========================
-      - name: Upload ROM to Phone
+      - name: Upload ROM chunks to phone
         run: |
-          FILE=$(ls upload/*.zip | head -n 1)
+          for file in upload/*; do
+            echo "Uploading $file"
 
-          echo "Uploading: $FILE"
-
-          curl -X POST \
-            -F "file=@$FILE" \
-            "${{ secrets.PHONE_UPLOAD_URL }}" \
-            --fail \
-            --show-error \
-            --silent
+            curl -X POST \
+              -F "file=@$file" \
+              "${{ secrets.PHONE_UPLOAD_URL }}" \
+              --fail \
+              --show-error \
+              --silent
+          done
 
       # =========================
-      # TELEGRAM NOTIFICATION (FIXED)
+      # 📲 TELEGRAM NOTIFY
       # =========================
-      - name: Notify Telegram
+      - name: Update Telegram
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TG_TOKEN }}/sendMessage \
             -H 'Content-Type: application/json' \
