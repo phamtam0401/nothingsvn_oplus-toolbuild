@@ -1,4 +1,4 @@
-name: Test Upload to Phone via Cloudflare
+name: 600MB Upload Test
 
 on:
   workflow_dispatch:
@@ -9,41 +9,37 @@ jobs:
 
     steps:
       # =========================
-      # 🧪 CREATE TEST FILE
+      # 🧪 CREATE 600MB FILE
       # =========================
-      - name: Create test files
+      - name: Create 600MB test file
         run: |
           mkdir -p upload
 
-          echo "===== GITHUB ACTIONS TEST =====" > upload/test.txt
-          echo "Time: $(date)" >> upload/test.txt
-          echo "Upload via Cloudflare Tunnel" >> upload/test.txt
+          echo "Creating 600MB file..."
+          dd if=/dev/zero of=upload/test_600mb.bin bs=1M count=600
 
-          # tạo file zip giả lập ROM
-          dd if=/dev/zero of=upload/test.zip bs=1M count=5
-
-          echo "Files created:"
           ls -lh upload
 
       # =========================
       # 🚀 UPLOAD TO PHONE
       # =========================
-      - name: Upload to Phone
+      - name: Upload to phone
         run: |
-          FILE="upload/test.zip"
+          FILE="upload/test_600mb.bin"
 
           echo "Uploading: $FILE"
 
           curl -X POST \
-            -F "file=@$FILE" \
+            --data-binary @"$FILE" \
+            -H "X-Filename: test_600mb.bin" \
             "${{ secrets.PHONE_UPLOAD_URL }}" \
             --fail \
             --show-error \
             --silent
 
       # =========================
-      # ✅ DONE LOG
+      # ✅ DONE
       # =========================
       - name: Done
         run: |
-          echo "Upload completed successfully"
+          echo "600MB upload test completed"
