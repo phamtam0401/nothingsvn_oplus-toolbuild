@@ -1,82 +1,49 @@
-name: test upload
+name: Test Upload to Phone via Cloudflare
 
 on:
   workflow_dispatch:
-    inputs:
-      input_url:
-        description: 'URL of the ROM to build'
-        required: true
-      
+
 jobs:
-  Initialize:
+  test-upload:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clean All Unused file,application
+      # =========================
+      # 🧪 CREATE TEST FILE
+      # =========================
+      - name: Create test files
         run: |
-          docker rmi `docker images -q` || true
-          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d || true
-          sudo apt -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* || true
-          sudo apt -y autoremove --purge || true
-          sudo apt -y autoclean || true
-          sudo apt clean || true
+          mkdir -p upload
 
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          swap-size-mb: 1024
-          root-reserve-mb: 512
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
+          echo "===== GITHUB ACTIONS TEST =====" > upload/test.txt
+          echo "Time: $(date)" >> upload/test.txt
+          echo "Upload via Cloudflare Tunnel" >> upload/test.txt
 
-      - name: Set up Time
+          # tạo file zip giả lập ROM
+          dd if=/dev/zero of=upload/test.zip bs=1M count=5
+
+          echo "Files created:"
+          ls -lh upload
+
+      # =========================
+      # 🚀 UPLOAD TO PHONE
+      # =========================
+      - name: Upload to Phone
         run: |
-          echo "Setting Vienam timezone"
-          sudo timedatectl set-timezone Asia/Ho_Chi_Minh
+          FILE="upload/test.zip"
 
-  Build:
-    needs: Initialize
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install OpenJDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+          echo "Uploading: $FILE"
 
-      - name: Checkout repository
-        uses: actions/checkout@main
+          curl -X POST \
+            -F "file=@$FILE" \
+            "${{ secrets.PHONE_UPLOAD_URL }}" \
+            --fail \
+            --show-error \
+            --silent
 
-      - name: Install Stuff
+      # =========================
+      # ✅ DONE LOG
+      # =========================
+      - name: Done
         run: |
-          sudo bash setup.sh
-        
-      - name: Giving permission
-        run: |
-          sudo chmod 777 -R *
-
-      - name: Setup Rclone...
-        run: |
-          sudo -E bash uploadROM.sh setup "${{ secrets.GH_TOKEN }}" "${{ secrets.GH_REPO }}" "${{ secrets.RCLONE_TOKEN_PATH }}"
-
-      - name: Verify Rclone Configuration
-        run: |
-          echo "[INFO] - Kiểm tra sự tồn tại của file rclone.conf..."
-          if [ ! -f "rclone.conf" ]; then
-            echo "[ERROR] - Không tìm thấy file rclone.conf. Quá trình tải file đã thất bại!"
-            exit 1
-          fi
-          
-          echo "[INFO] - File cấu hình đã tồn tại. Đang kiểm tra định dạng rclone..."
-          # Lệnh này sẽ in ra danh sách các remote đang có trong file config
-          rclone listremotes --config="rclone.conf" || {
-            echo "[ERROR] - rclone.conf bị sai định dạng hoặc không hợp lệ!"
-            cat rclone.conf
-            exit 1
-          }
-          echo "[SUCCESS] - Rclone đã sẵn sàng
-          
-      - name: Update Database and Notificaton to Telegram
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TG_TOKEN }}
-        run: |
+          echo "Upload completed successfully"
